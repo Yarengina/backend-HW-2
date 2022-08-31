@@ -1,11 +1,12 @@
 const http = require('http');
 const getUsers = require('./modules/users');
 
-const hostname = '127.0.0.1';
-const port = 3003;
+const HOSTNAME = '127.0.0.1';
+const PORT = 3003;
+const HTTP_HOSTNAME = 'http://127.0.0.1';
 
 const server = http.createServer((request, response) => {
-    const url = new URL(request.url, 'http://127.0.0.1');
+    const url = new URL(request.url, HTTP_HOSTNAME);
 
     if (url.search === '?users') {
         response.statusCode = 200;
@@ -13,7 +14,6 @@ const server = http.createServer((request, response) => {
         response.setHeader('Content-Type', 'application/json');
         response.write(getUsers());
         response.end();
-        return;
     } 
     
     else if (url.search === '') {
@@ -50,6 +50,6 @@ const server = http.createServer((request, response) => {
     
 });
 
-server.listen(port, hostname, () => {
-    console.log(`Сервер запущен по адресу http://${hostname}:${port}/`)
+server.listen(PORT, HOSTNAME, () => {
+    console.log(`Сервер запущен по адресу http://${HOSTNAME}:${PORT}/`)
 });
