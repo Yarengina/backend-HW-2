@@ -1,12 +1,13 @@
 const http = require('http');
 const getUsers = require('./modules/users');
 
-const HOSTNAME = '127.0.0.1';
+const HOST_NAME = '127.0.0.1';
 const PORT = 3003;
-const HTTP_HOSTNAME = 'http://127.0.0.1';
 
 const server = http.createServer((request, response) => {
-    const url = new URL(request.url, HTTP_HOSTNAME);
+    const url = new URL(request.url, `http://${HOST_NAME}`);
+
+    const userName = url.searchParams.get('hello');
 
     if (url.search === '?users') {
         response.statusCode = 200;
@@ -24,15 +25,15 @@ const server = http.createServer((request, response) => {
         response.end();
     } 
     
-    else if (url.searchParams.get('hello') === '<name>') {
+    else if (userName && userName !== '') {
         response.statusCode = 200;
         response.statusMessage = 'Ok';
         response.setHeader('Content-Type', 'text/plain');
-        response.write('Hello, .');
+        response.write(`Hello, ${userName}.`);
         response.end();
     }
 
-    else if (url.searchParams.get('hello') === '') {
+    else if (userName === '') {
         response.statusCode = 400;
         response.statusMessage = 'Ok';
         response.setHeader('Content-Type', 'text/plain');
@@ -50,6 +51,6 @@ const server = http.createServer((request, response) => {
     
 });
 
-server.listen(PORT, HOSTNAME, () => {
-    console.log(`Сервер запущен по адресу http://${HOSTNAME}:${PORT}/`)
+server.listen(PORT, HOST_NAME, () => {
+    console.log(`Сервер запущен по адресу http://${HOST_NAME}:${PORT}/`)
 });
